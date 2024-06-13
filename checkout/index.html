@@ -177,7 +177,7 @@
 			  
 			document.getElementById('container-body').classList.remove('hidden');
 			document.getElementById('container-message').classList.add('hidden');
-			document.getElementById('quotation-id').innerText = message;
+			document.getElementById('quotation-id').innerText = quotationId;
 			details.journeys.forEach(x => addListItem('journey-details', x));
 			details.furtherDetails.forEach(x => addListItem('further-details', x));
 		}
