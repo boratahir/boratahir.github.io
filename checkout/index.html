@@ -106,7 +106,9 @@
 	
 	<div class="container body centered" id="container-message">
 		<h2 id="message">Loading...</h2>
-    </div>
+		<br>
+		<a id="linkToCheckoutPage" class="hidden">Link to checkout page</a>
+    	</div>
 
     <footer class="footer">
         <div class="container">
@@ -170,8 +172,11 @@
 				id: 'sumup-card',
 				checkoutId: checkoutId,
 				onResponse: function (type, body) {
-				  console.log('Type', type);
-				  console.log('Body', body);
+				  console.log('Type: ' + type + ' Body: ' + body);
+				  if (type === 'success' || type === 'fail') {
+				    var currentUrl = window.location.href;
+				    window.location.href = currentUrl + '&completed=true';
+				  }
 				},
 			  });
 			  
@@ -187,6 +192,16 @@
 			const newLiElement = document.createElement('li');
 			newLiElement.textContent = itemText;
 			ulElement.appendChild(newLiElement);
+		}
+
+		function displayLinkToCheckoutPage(id) {
+			var currentUrl = window.location.href;
+    			var url = new URL(currentUrl);
+    			var checkoutUrl = url.origin + url.pathname + '?id=' + id;
+
+    			var checkoutLink = document.getElementById('linkToCheckoutPage');
+    			checkoutLink.classList.remove('hidden');
+    			checkoutLink.href = checkoutUrl;
 		}
 
 		const queryParams = getQueryParams();
@@ -211,6 +226,7 @@
 					}
 					else if (response.status === FAILED) {
 						displayMessage(FAILURE_MESSAGE.replace('[QUOTATION_ID]', response.quotationId), true);
+						displayLinkToCheckoutPage(id);
 					}
 					else if (response.status === PAID) {
 						displayMessage(SUCCESS_MESSAGE.replace('[QUOTATION_ID]', response.quotationId));
